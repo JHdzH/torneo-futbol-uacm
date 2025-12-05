@@ -1,0 +1,34 @@
+# Eclipse
+.metadata/
+bin/
+.classpath
+.project
+.settings/
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!mvnw
+!mvnw.cmd
+
+# Spring Boot local config
+application-local.properties
+application-dev.properties
+
+# PostgreSQL local
+*.backup
+*.dump
+/pgdata/
+
+# Logs
+*.log
+logs/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.key
+*.p12
