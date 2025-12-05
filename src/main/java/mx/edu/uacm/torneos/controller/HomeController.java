@@ -1,0 +1,16 @@
+package mx.edu.uacm.torneos.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HomeController {
+    
+    @GetMapping("/")
+    public String home(Model model) {
+        model.addAttribute("titulo", "Sistema de Gestión de Torneos de Fútbol");
+        model.addAttribute("subtitulo", "UC-04: Registrar Eventos de Partido");
+        return "home";
+    }
+}

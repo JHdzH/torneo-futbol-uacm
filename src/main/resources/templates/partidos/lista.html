@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Partidos - Sistema de Torneos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Partidos de Fútbol</h1>
+            <div>
+                <a th:href="@{/}" class="btn btn-secondary">Inicio</a>
+                <a th:href="@{/partidos/nuevo}" class="btn btn-primary">Nuevo Partido</a>
+            </div>
+        </div>
+        
+        <!-- Tabla de Partidos -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Lista de Partidos</h5>
+            </div>
+            <div class="card-body">
+                <div th:if="${partidos.empty}" class="alert alert-info">
+                    No hay partidos registrados. 
+                    <a th:href="@{/partidos/nuevo}">Crea el primero</a>
+                </div>
+                
+                <table th:unless="${partidos.empty}" class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Marcador</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="partido : ${partidos}">
+                            <td th:text="${partido.id}">1</td>
+                            <td>
+                                <span th:switch="${partido.estado}">
+                                    <span th:case="'PROGRAMADO'" class="badge bg-secondary">PROGRAMADO</span>
+                                    <span th:case="'EN_CURSO'" class="badge bg-warning">EN CURSO</span>
+                                    <span th:case="'FINALIZADO'" class="badge bg-success">FINALIZADO</span>
+                                    <span th:case="*" class="badge bg-info" th:text="${partido.estado}">OTRO</span>
+                                </span>
+                            </td>
+                            <td th:text="${#temporals.format(partido.fecha, 'dd/MM/yyyy HH:mm')}">01/01/2024 15:00</td>
+                            <td>
+                                <span class="fw-bold" th:text="${partido.golesLocal} + ' - ' + ${partido.golesVisitante}">0 - 0</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/partidos/{id}(id=${partido.id})}" class="btn btn-sm btn-info">Ver</a>
+                                <form th:if="${partido.estado == 'EN_CURSO'}" th:action="@{/partidos/{id}/finalizar(id=${partido.id})}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-warning">Finalizar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer text-muted">
+                Total: <span th:text="${partidos.size()}">0</span> partidos
+            </div>
+        </div>
+        
+        <!-- Información del sistema -->
+        <div class="mt-4">
+            <div class="alert alert-light border">
+                <h6>UC-04: Registrar Eventos de Partido</h6>
+                <p class="mb-0">Sistema para gestión de partidos de fútbol en tiempo real.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

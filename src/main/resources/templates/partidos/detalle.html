@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Partido - Sistema de Torneos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Navegación -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/}">Inicio</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/partidos/}">Partidos</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Detalle Partido</li>
+            </ol>
+        </nav>
+        
+        <!-- Información del Partido -->
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">Partido ID: <span th:text="${partido.id}">1</span></h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Información General</h5>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th width="40%">Estado:</th>
+                                <td>
+                                    <span th:switch="${partido.estado}">
+                                        <span th:case="'PROGRAMADO'" class="badge bg-secondary">PROGRAMADO</span>
+                                        <span th:case="'EN_CURSO'" class="badge bg-warning">EN CURSO</span>
+                                        <span th:case="'FINALIZADO'" class="badge bg-success">FINALIZADO</span>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Fecha:</th>
+                                <td th:text="${#temporals.format(partido.fecha, 'dd/MM/yyyy HH:mm')}">01/01/2024 15:00</td>
+                            </tr>
+                            <tr>
+                                <th>Goles Local:</th>
+                                <td th:text="${partido.golesLocal}">0</td>
+                            </tr>
+                            <tr>
+                                <th>Goles Visitante:</th>
+                                <td th:text="${partido.golesVisitante}">0</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="text-center mb-4">
+                            <h3 class="display-4">
+                                <span th:text="${partido.golesLocal}">0</span> - <span th:text="${partido.golesVisitante}">0</span>
+                            </h3>
+                            <p class="text-muted">Marcador Actual</p>
+                        </div>
+                        
+                        <!-- Botones de Acción -->
+                        <div class="d-grid gap-2">
+                            <a th:href="@{/partidos/}" class="btn btn-secondary">Volver a Lista</a>
+                            
+                            <form th:if="${partido.estado == 'EN_CURSO'}" th:action="@{/partidos/{id}/finalizar(id=${partido.id})}" method="post">
+                                <button type="submit" class="btn btn-warning w-100">Finalizar Partido</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sección de Goles (UC-04) -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Eventos del Partido (Goles)</h5>
+            </div>
+            <div class="card-body">
+                <div th:if="${partido.goles.empty}" class="alert alert-info">
+                    No se han registrado goles en este partido.
+                </div>
+                
+                <table th:unless="${partido.goles.empty}" class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Minuto</th>
+                            <th>Es Penal</th>
+                            <th>Jugador</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="gol, stat : ${partido.goles}">
+                            <td th:text="${stat.count}">1</td>
+                            <td th:text="${gol.minuto} + '''">45'</td>
+                            <td>
+                                <span th:if="${gol.esPenal}" class="badge bg-danger">PENAL</span>
+                                <span th:unless="${gol.esPenal}" class="badge bg-secondary">Normal</span>
+                            </td>
+                            <td>
+                                <span th:if="${gol.jugador != null}" th:text="${gol.jugador.nombre}">Jugador 1</span>
+                                <span th:unless="${gol.jugador != null}" class="text-muted">Sin asignar</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- Formulario para registrar gol (simplificado) -->
+                <div th:if="${partido.estado == 'EN_CURSO'}" class="mt-4 border p-3 rounded">
+                    <h6>Registrar Nuevo Gol</h6>
+                    <p class="text-muted small">Funcionalidad completa del UC-04</p>
+                    <div class="alert alert-warning">
+                        <small>Nota: Para implementar el registro completo de goles, se necesita:</small>
+                        <ul class="small mb-0">
+                            <li>Formulario con selección de jugador</li>
+                            <li>Validación del minuto</li>
+                            <li>Actualización automática del marcador</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Información del Caso de Uso -->
+        <div class="mt-4 p-3 bg-light border rounded">
+            <h6>📋 UC-04: Registrar Eventos de Partido</h6>
+            <p class="mb-0 small">Este módulo permite el registro en tiempo real de eventos durante los partidos:
+                goles, tarjetas, sustituciones y finalización del partido.</p>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

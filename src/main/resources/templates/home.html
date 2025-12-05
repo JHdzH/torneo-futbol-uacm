@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Torneos</title>
+</head>
+<body>
+    <h1 th:text="${titulo}">Sistema de Torneos</h1>
+    <p th:text="${subtitulo}">UC-04: Registrar Eventos de Partido</p>
+    
+    <h2>Enlaces:</h2>
+    <ul>
+        <li><a th:href="@{/partidos/}">Gestionar Partidos</a></li>
+        <li><a th:href="@{/partidos/nuevo}">Crear Nuevo Partido</a></li>
+    </ul>
+</body>
+</html>
